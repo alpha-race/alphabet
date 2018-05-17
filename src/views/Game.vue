@@ -98,5 +98,5 @@ export default {
 .myButton:active {
 	position:relative;
 	top:1px;
-}        
+}
 </style>
