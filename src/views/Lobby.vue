@@ -3,6 +3,7 @@
     <div class="row">
       <div class="col-12">
         <h3 class="titleSection mt-3">Lobby!</h3>
+        <button class="btn btn-outline-primary" @click="logout">Exit Game!</button>
       </div>
       <div class="col-lg-9 col-xs-12 roomsSection">
         <h4 class="roomHeader m-3">Rooms</h4>
@@ -12,7 +13,7 @@
           </button>
           <table class="table table-hover">
             <tbody v-for="(room, index) in rooms" :key="index">
-              <tr>{{ room.name }}</tr>
+              <tr><router-link :to="{ name: 'room', params: { id: room['.key'] }}" @click.native="enterRoom(room)">{{ room.name }}</router-link></tr>
             </tbody>
           </table>
           <!-- Modal -->
@@ -37,7 +38,18 @@
           </div>
       </div>
       <div class="col-lg-3 col-xs-12 usersSection">
-        <h5 class="userHeader m-3">Users Online</h5>
+        <table class="table table-borderless">
+          <thead>
+            <tr>
+              <th>Users Online</th>
+            </tr>
+          </thead>
+          <tbody v-for="(player, index) in players" :key="index">
+            <tr>
+              <td>{{ player.name }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -52,11 +64,12 @@ export default {
   name: 'lobby',
   data () {
     return {
-      roomName: ''
+      roomName: '',
+      testing: {}
     }
   },
   computed: {
-    ...mapState(['username'])
+    ...mapState(['username', 'userId'])
   },
   firebase: {
     players: db.ref('players'),
@@ -64,6 +77,7 @@ export default {
   },
   created () {
     this.$store.commit('setUsername', localStorage.getItem('username'))
+    this.$store.commit('setUserId', localStorage.getItem('userId'))
   },
   methods: {
     addNewRoom () {
@@ -74,7 +88,21 @@ export default {
           name: this.roomName,
           player1: this.username
         })
+        let key = this.rooms[this.rooms.length-1]['.key']
+        this.$router.push(`/room/${key}`)
       }
+    },
+    enterRoom (roomDetail) {
+      const roomData = { ...roomDetail }
+      delete roomData['.key']
+      roomData.player2 = this.username
+      this.$firebaseRefs.rooms.child(roomDetail['.key']).set(roomData)
+    },
+    logout () {
+      localStorage.removeItem('username')
+      localStorage.removeItem('userId')
+      this.$firebaseRefs.players.child(this.userId).remove()
+      this.$router.push('/')
     }
   }
 }
