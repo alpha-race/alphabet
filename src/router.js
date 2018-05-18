@@ -22,12 +22,14 @@ export default new Router({
     {
       path: '/room/:id',
       name: 'room',
-      component: Room
+      component: Room,
+      children: [
+        {
+          path: 'game/:player',
+          name: 'game',
+          component: Game
+        }
+      ]
     },
-    {
-      path: '/game',
-      name: 'game',
-      component: Game
-    }
   ]
 })
