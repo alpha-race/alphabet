@@ -13,7 +13,7 @@
           </button>
           <table class="table table-striped m-1">
             <tbody v-for="(room, index) in rooms" :key="index">
-              <tr ><router-link disabled="false" class="btn btn-outline-success" :to="{ name: 'room', params: { id: room['.key'] }}" @click.native="enterRoom(room)" :class="room.status">{{ room.name }}</router-link></tr>
+              <tr ><button :disabled="room.status == 1 ? true : false" @click="enterRoom(room)" class="btn btn-success m-4">{{ room.name }}</button></tr>
             </tbody>
           </table>
           <!-- Modal -->
@@ -65,7 +65,7 @@ export default {
   data () {
     return {
       roomName: '',
-      testing: {}
+      disabled: 0,
     }
   },
   computed: {
@@ -87,7 +87,7 @@ export default {
         this.$firebaseRefs.rooms.push({
           name: this.roomName,
           player1: this.username,
-          status: true
+          status: 0
         })
         let key = this.rooms[this.rooms.length-1]['.key']
         this.$router.push(`/room/${key}`)
@@ -97,8 +97,10 @@ export default {
       const roomData = { ...roomDetail }
       delete roomData['.key']
       roomData.player2 = this.username
-      roomData.status = 'full'
+      roomData.status = 1
       this.$firebaseRefs.rooms.child(roomDetail['.key']).set(roomData)
+      console.log(roomDetail)
+      this.$router.push(`/room/${roomDetail['.key']}`)
     },
     logout () {
       localStorage.removeItem('username')
@@ -136,12 +138,12 @@ tr{
   background: #a9d15e;
   margin: 2% 3%;
 }
-a.btn.btn-outline-success.full {
+button {
     width: 150px;
     font-weight: bold;
 }
 
-a.btn.btn-outline-success.ok {
+a.btn.btn-outline-success.0 {
     width: 150px;
     font-weight: bold;
 }
