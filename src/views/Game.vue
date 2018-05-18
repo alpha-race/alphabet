@@ -12,8 +12,11 @@
 </template>
 
 <script>
+// @ is an alias to /src
 import _ from 'lodash'
 import swal from 'sweetalert'
+import { db } from '@/firebase.js'
+import { mapState } from 'vuex'
 
 export default {
   data () {
@@ -28,12 +31,15 @@ export default {
       return _.shuffle(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'])
     }
   },
+  firebase: {
+    rooms: db.ref('rooms')
+  },
   methods: {
     isWinner() {
       if (this.state == 9) {
+        this.$firebaseRefs.rooms.push({ state: 'Game is end!' })
         swal('You win!')
         this.state = 0
-        console.log(this.state)
       }
     },
     sendAlphabet: function (alphabet) {
