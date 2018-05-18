@@ -5,15 +5,15 @@
         <h3 class="titleSection mt-3">Lobby!</h3>
         <button class="btn btn-outline-primary" @click="logout">Exit Game!</button>
       </div>
-      <div class="col-lg-9 col-xs-12 roomsSection mt-4">
+      <div class="col-lg-8 col-xs-12 roomsSection mt-4">
         <h4 class="roomHeader m-3">Rooms</h4>
         <!-- Button trigger modal -->
           <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalAddRoom">
             Add New Room
           </button>
-          <table id="tableroom" class="table table-hover m-1">
+          <table class="table table-striped m-1">
             <tbody v-for="(room, index) in rooms" :key="index">
-              <tr ><router-link :to="{ name: 'room', params: { id: room['.key'] }}" @click.native="enterRoom(room)" :class="room.status">{{ room.name }}</router-link></tr>
+              <tr ><router-link disabled="false" class="btn btn-outline-success" :to="{ name: 'room', params: { id: room['.key'] }}" @click.native="enterRoom(room)" :class="room.status">{{ room.name }}</router-link></tr>
             </tbody>
           </table>
           <!-- Modal -->
@@ -37,8 +37,8 @@
             </div>
           </div>
       </div>
-      <div class="col-lg-3 col-xs-12 usersSection">
-        <table class="pemaintable table table-borderless mt-3">
+      <div class="col-lg-2 col-xs-12 usersSection">
+        <table class="table table-striped mt-3">
           <thead>
             <tr>
               <th>Users Online</th>
@@ -87,7 +87,7 @@ export default {
         this.$firebaseRefs.rooms.push({
           name: this.roomName,
           player1: this.username,
-          status: 'ok'
+          status: true
         })
         let key = this.rooms[this.rooms.length-1]['.key']
         this.$router.push(`/room/${key}`)
@@ -121,37 +121,28 @@ tr{
 .ok {
   background: #99ff99 ;
   color: black;
-  width: 100px;
+  border: 1px solid green;
 }
 .full {
   background: #ffb3b3;
-  pointer-events: none;
-  cursor: default;
   color: black;;
-  border-width: solid;
+  border: 1px solid red;
+}
+.roomsSection {
+  background: #ffbe4f;
+  margin: 3%;
+}
+.usersSection {
+  background: #a9d15e;
+  margin: 2% 3%;
+}
+a.btn.btn-outline-success.full {
+    width: 150px;
+    font-weight: bold;
 }
 
-#tableroom {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
+a.btn.btn-outline-success.ok {
+    width: 150px;
+    font-weight: bold;
 }
-
-#tableroom td, #tableroom th {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-#tableroom tr:nth-child(even){background-color: #f2f2f2;}
-
-#tableroom tr:hover {background-color: #ddd;}
-
-#tableroom th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: #4CAF50;
-    color: white;
-}
-
 </style>
