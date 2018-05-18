@@ -17,6 +17,7 @@
                 </td>
             </tr>
         </tbody>
+        <button @click="goToGame($route.params.id)">Enter Game!</button>
     </table>
 </template>
 
@@ -49,7 +50,13 @@ export default {
     },
     updated(){
         if(this.players.length==2){
-            this.$router.push({name:'game'})
+            this.$router.push({name:'game', params: {id: $route.params.id}})
+        }
+    },
+    methods: {
+        goToGame (key) {
+            console.log(key)
+            this.$router.push({name:'game', params: {id: key}})
         }
     }
 }

@@ -23,13 +23,11 @@ export default new Router({
       path: '/room/:id',
       name: 'room',
       component: Room,
-      children: [
-        {
-          path: 'game/:player',
-          name: 'game',
-          component: Game
-        }
-      ]
     },
+    {
+      path: 'game/:id',
+      name: 'game',
+      component: Game
+    }
   ]
 })
