@@ -1,6 +1,7 @@
 <template>
     <div class="board">
     <h3>Alphabet Racer</h3>
+    <p>Room loaded has ID: {{ $route.params.id }}</p>
     <div class='board'>
       <ul>
         <li v-for="alphabet in random" :key="alphabet">
@@ -35,6 +36,17 @@ export default {
   firebase: {
     rooms: db.ref('rooms')
   },
+  created: function () {
+    let tempRoom = {}
+    this.rooms.forEach(room => {
+      if(room['.key'] === this.$route.params.id) tempRoom = room
+    })
+    const copy = { ...tempRoom }
+    delete copy['.key']
+    copy.gameStatusStart = true
+    copy.gameStatusEnd = false
+    this.$firebaseRefs.rooms.child(this.$route.params.id).set(copy)
+  },
   methods: {
     isWinner() {
       if (this.state == 9) {
@@ -45,7 +57,6 @@ export default {
       }
     },
     sendAlphabet: function (alphabet) {
-      console.log(alphabet);
       if (alphabet == this.alphabetDefault[this.state]) {
         this.state++
         this.isWinner()
