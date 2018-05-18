@@ -5,15 +5,15 @@
         <h3 class="titleSection mt-3">Lobby!</h3>
         <button class="btn btn-outline-primary" @click="logout">Exit Game!</button>
       </div>
-      <div class="col-lg-9 col-xs-12 roomsSection">
+      <div class="col-lg-9 col-xs-12 roomsSection mt-4">
         <h4 class="roomHeader m-3">Rooms</h4>
         <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAddRoom">
+          <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalAddRoom">
             Add New Room
           </button>
-          <table class="table table-hover">
+          <table class="roomtable table table-hover m-1">
             <tbody v-for="(room, index) in rooms" :key="index">
-              <tr><router-link :to="{ name: 'room', params: { id: room['.key'] }}" @click.native="enterRoom(room)">{{ room.name }}</router-link></tr>
+              <tr class="disabled"><router-link :to="{ name: 'room', params: { id: room['.key'] }}" @click.native="enterRoom(room)">{{ room.name }}</router-link></tr>
             </tbody>
           </table>
           <!-- Modal -->
@@ -31,14 +31,14 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" data-dismiss="modal" @click="addNewRoom">Add Room</button>
+                  <button type="button" class="btn btn-primary " data-dismiss="modal" @click="addNewRoom">Add Room</button>
                 </div>
               </div>
             </div>
           </div>
       </div>
       <div class="col-lg-3 col-xs-12 usersSection">
-        <table class="table table-borderless">
+        <table class="pemaintable table table-borderless mt-3">
           <thead>
             <tr>
               <th>Users Online</th>
@@ -109,10 +109,19 @@ export default {
 </script>
 
 <style scoped>
-.roomsSection {
-  border: 1px solid white;
+table{
+  border: 3px;
+  border-collapse: separate;
 }
-.usersSection {
-  border: 1px solid white;
+tr{
+  border-style: dashed
 }
+.pemaintable{
+  border-style: groove;
+}
+.disabled {
+   pointer-events: none;
+   cursor: default;
+}
+
 </style>
