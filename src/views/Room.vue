@@ -18,7 +18,9 @@
             </tr>
         </tbody>
     </table>
-</template>lobbylobby
+</template>
+
+</template>
 
 <script>
 import {db} from '@/firebase.js'
