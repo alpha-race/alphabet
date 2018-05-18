@@ -5,15 +5,15 @@
         <h3 class="titleSection mt-3">Lobby!</h3>
         <button class="btn btn-outline-primary" @click="logout">Exit Game!</button>
       </div>
-      <div class="col-lg-9 col-xs-12 roomsSection">
+      <div class="col-lg-9 col-xs-12 roomsSection mt-4">
         <h4 class="roomHeader m-3">Rooms</h4>
         <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAddRoom">
+          <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalAddRoom">
             Add New Room
           </button>
-          <table class="table table-hover">
+          <table id="tableroom" class="table table-hover m-1">
             <tbody v-for="(room, index) in rooms" :key="index">
-              <tr><router-link :to="{ name: 'room', params: { id: room['.key'] }}" @click.native="enterRoom(room)">{{ room.name }}</router-link></tr>
+              <tr ><router-link :to="{ name: 'room', params: { id: room['.key'] }}" @click.native="enterRoom(room)" :class="room.status">{{ room.name }}</router-link></tr>
             </tbody>
           </table>
           <!-- Modal -->
@@ -31,14 +31,14 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" data-dismiss="modal" @click="addNewRoom">Add Room</button>
+                  <button type="button" class="btn btn-primary " data-dismiss="modal" @click="addNewRoom">Add Room</button>
                 </div>
               </div>
             </div>
           </div>
       </div>
       <div class="col-lg-3 col-xs-12 usersSection">
-        <table class="table table-borderless">
+        <table class="pemaintable table table-borderless mt-3">
           <thead>
             <tr>
               <th>Users Online</th>
@@ -86,7 +86,8 @@ export default {
       } else {
         this.$firebaseRefs.rooms.push({
           name: this.roomName,
-          player1: this.username
+          player1: this.username,
+          status: 'ok'
         })
         let key = this.rooms[this.rooms.length-1]['.key']
         this.$router.push(`/room/${key}`)
@@ -96,6 +97,7 @@ export default {
       const roomData = { ...roomDetail }
       delete roomData['.key']
       roomData.player2 = this.username
+      roomData.status = 'full'
       this.$firebaseRefs.rooms.child(roomDetail['.key']).set(roomData)
     },
     logout () {
@@ -109,10 +111,47 @@ export default {
 </script>
 
 <style scoped>
-.roomsSection {
-  border: 1px solid white;
+table{
+  border: 3px;
+  border-collapse: separate;
 }
-.usersSection {
-  border: 1px solid white;
+tr{
+  border-style: dashed
 }
+.ok {
+  background: #99ff99 ;
+  color: black;
+  width: 100px;
+}
+.full {
+  background: #ffb3b3;
+  pointer-events: none;
+  cursor: default;
+  color: black;;
+  border-width: solid;
+}
+
+#tableroom {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#tableroom td, #tableroom th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#tableroom tr:nth-child(even){background-color: #f2f2f2;}
+
+#tableroom tr:hover {background-color: #ddd;}
+
+#tableroom th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
 </style>
