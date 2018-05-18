@@ -13,7 +13,7 @@
           </button>
           <table class="table table-hover">
             <tbody v-for="(room, index) in rooms" :key="index">
-              <tr><router-link :to="{ name: 'room', params: { id: room['.key'] }}" @click.native="enterRoom(room)">{{ room.name }}</router-link></tr>
+              <tr><router-link :to="{ name: 'room', params: { id: room['.key'] }}" @click.native="enterRoom(room)" :class="room.status">{{ room.name }}</router-link></tr>
             </tbody>
           </table>
           <!-- Modal -->
@@ -86,7 +86,8 @@ export default {
       } else {
         this.$firebaseRefs.rooms.push({
           name: this.roomName,
-          player1: this.username
+          player1: this.username,
+          status: 'ok'
         })
         let key = this.rooms[this.rooms.length-1]['.key']
         this.$router.push(`/room/${key}`)
@@ -96,6 +97,7 @@ export default {
       const roomData = { ...roomDetail }
       delete roomData['.key']
       roomData.player2 = this.username
+      roomData.status = 'full'
       this.$firebaseRefs.rooms.child(roomDetail['.key']).set(roomData)
     },
     logout () {
@@ -114,5 +116,11 @@ export default {
 }
 .usersSection {
   border: 1px solid white;
+}
+.ok {
+  background: green;
+}
+.full {
+  background: red;
 }
 </style>
