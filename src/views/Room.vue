@@ -2,20 +2,12 @@
      <table class="table table-striped table-dark">
         <thead>
             <tr class="col-sm-12">
-                <th scope="col" class='col-sm-4 player'>Player</th>
-                <th scope="col" ></th>
+                <th scope="col">Player</th>
                 <th scope="col" ></th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for='(player, index) in players' :key="index">
-                <td scope="row" >{{player}} </td>
-                <td> <button  type='btn' :class="'btn btn-danger ' + index" @click="leave(player['.key'])" > Leave </button> </td>
-                <td>
-                 <button  v-if="statusPlayer[index]==null" type='btn' :class="'btn btn-info ' + index" @click="ready(index,player['.key'])" > Cancel </button> 
-                 <button  v-else type='btn' :class="'btn btn-success ' + index" @click='ready(index)' > Ready </button> 
-                </td>
-            </tr>
+          
         </tbody>
     </table>
 </template>
@@ -27,28 +19,53 @@ export default {
     name:'room',
     data() {
         return {
-        statusPlayer:[],
+            player1:null,
+            player2:null,
         }
    
     },
     firebase:{
         players:db.ref('players'),
-        rooms:db.ref('rooms')
+        rooms:db.ref('rooms'),
+        roomPlayers: db.ref('rooms/-LCiNvC7HFZOcPP8bVvI')
     },
     methods:{
         ready(index,key){
         },
         leave(key){
              this.$firebaseRefs.players.child(key).remove()
-             if(this.players.length==0){
-                this.$router.push({name:'lobby'})
-             }
+            this.$router.push({name:'lobby'})
         }
     },
     updated(){
         if(this.players.length==2){
             this.$router.push({name:'game'})
         }
+    },
+    updated(){
+          this.user = localStorage.getItem('userId')
+        // if(this.players.length==2){
+        //     this.$router.push({name:'game'})
+        // }
+            
+    },
+    mounted(){
+        console.log('masuk')
+        // localStorage.setItem('userId','-LCickiSUotdzCk_pMqW')
+         this.user = localStorage.getItem('userId')
+         console.log(this.rooms)
+         console.log(this.roomPlayers[1]['.value'])
+         console.log(this.roomPlayers[2]['.value'])
+         console.log(this.$route.params.id)
+        //  this.$firebaseRefs.rooms.child('-LCiNvC7HFZOcPP8bVvI').on('value',function(snapshot){
+        //      console.log(snapshot.val())
+        //      this.player1 = snapshot.val().player1
+        //      this.player2 = snapshot.val().player2
+        //     //  this.roomPlayers.push(snapshot.val().player2)
+             
+        //  })
+        //  console.log(this.player1)
+         
     }
 }
 </script>
