@@ -1,13 +1,64 @@
 <template>
+     <table class="table table-striped table-dark">
+        <thead>
+            <tr class="col-sm-12">
+                <th scope="col" class='col-sm-4 player'>Player</th>
+                <th scope="col" ></th>
+                <th scope="col" ></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for='(player,index) in players' >
+                <td scope="row" >{{player}} </td>
+                <td> <button  type='btn' :class="'btn btn-danger ' + index" @click="leave(player['.key'])" > Leave </button> </td>
+                <td>
+                 <button  v-if="statusPlayer[index]==null" type='btn' :class="'btn btn-info ' + index" @click="ready(index,player['.key'])" > Cancel </button> 
+                 <button  v-else type='btn' :class="'btn btn-success ' + index" @click='ready(index)' > Ready </button> 
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</template>
 
 </template>
 
 <script>
-export default {
+import {db} from '@/firebase.js'
 
+export default {
+    name:'room',
+    data() {
+        return {
+        statusPlayer:[],
+        }
+   
+    },
+    firebase:{
+        players:db.ref('players'),
+        rooms:db.ref('rooms')
+    },
+    methods:{
+        ready(index,key){
+        },
+        leave(key){
+             this.$firebaseRefs.players.child(key).remove()
+             if(this.players.length==0){
+                this.$router.push({name:'lobby'})
+             }
+        }
+    },
+    updated(){
+        if(this.players.length==2){
+            this.$router.push({name:'game'})
+        }
+    }
 }
 </script>
 
-<style>
-
+<style scoped>
+    body {
+            background-image: url('../assets/background-game.jpg');
+            background-size:cover;
+            background-repeat: no-repeat;
+        }
 </style>

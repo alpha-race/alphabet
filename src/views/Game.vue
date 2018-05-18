@@ -1,4 +1,12 @@
 <template>
+    <div>
+    hello
+    </div>
+</template>
+
+<script>
+export default {
+    name:'game'
   <div>
     <h3>Alphabet Racer</h3>
     <div class="board">
