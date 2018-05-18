@@ -13,13 +13,14 @@
 
 <script>
 import _ from 'lodash'
-// import swal from 'sweetalert'
+import swal from 'sweetalert'
 
 export default {
   data () {
     return {
       alphabetDefault: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
-      alphabetResult: []
+      state: 0,
+      warning: 'You click wrong alphabet!'
     }
   },
   computed: {
@@ -28,9 +29,21 @@ export default {
     }
   },
   methods: {
+    isWinner() {
+      if (this.state == 9) {
+        swal('You win!')
+        this.state = 0
+        console.log(this.state)
+      }
+    },
     sendAlphabet: function (alphabet) {
-      console.log(alphabet)
-      // swal(alphabet);
+      console.log(alphabet);
+      if (alphabet == this.alphabetDefault[this.state]) {
+        this.state++
+        this.isWinner()
+      } else {
+        swal(this.warning)
+      }
     }
   }
 }
