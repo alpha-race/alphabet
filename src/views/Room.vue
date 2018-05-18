@@ -8,7 +8,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for='(player, index) in players' :key="index">
+            <tr v-for='(player,index) in players' >
                 <td scope="row" >{{player}} </td>
                 <td> <button  type='btn' :class="'btn btn-danger ' + index" @click="leave(player['.key'])" > Leave </button> </td>
                 <td>
@@ -18,6 +18,8 @@
             </tr>
         </tbody>
     </table>
+</template>
+
 </template>
 
 <script>
