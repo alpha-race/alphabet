@@ -1,15 +1,7 @@
 <template>
-    <div>
-    hello
-    </div>
-</template>
-
-<script>
-export default {
-    name:'game'
-  <div>
-    <h3>Alphabet Racer</h3>
     <div class="board">
+    <h3>Alphabet Racer</h3>
+    <div class='board'>
       <ul>
         <li v-for="alphabet in random" :key="alphabet">
           <button class="myButton" @click="sendAlphabet(alphabet)">{{ alphabet }}</button>
@@ -22,11 +14,12 @@ export default {
 <script>
 // @ is an alias to /src
 import _ from 'lodash'
-import swal from 'sweetalert'
+// import swal from 'sweetalert'
 import { db } from '@/firebase.js'
 import { mapState } from 'vuex'
 
 export default {
+  name:'game',
   data () {
     return {
       alphabetDefault: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
@@ -46,7 +39,8 @@ export default {
     isWinner() {
       if (this.state == 9) {
         this.$firebaseRefs.rooms.push({ state: 'Game is end!' })
-        swal('You win!')
+        // swal('You win!')
+        alert('You win')
         this.state = 0
       }
     },
@@ -56,7 +50,8 @@ export default {
         this.state++
         this.isWinner()
       } else {
-        swal(this.warning)
+        alert(this.warning)
+        // swal(this.warning)
       }
     }
   }
