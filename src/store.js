@@ -9,9 +9,11 @@ export default new Vuex.Store({
     username: ''
   },
   mutations: {
-
+    login (state, payload){
+      state.username = payload
+    }
   },
   actions: {
-    
+
   }
 })
