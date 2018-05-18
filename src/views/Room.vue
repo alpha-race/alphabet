@@ -1,26 +1,23 @@
 <template>
-     <table class="table table-striped table-dark">
-        <thead>
-            <tr class="col-sm-12">
-                <th scope="col" class='col-sm-4 player'>Player</th>
-                <th scope="col" ></th>
-                <th scope="col" ></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for='(player,index) in players' >
-                <td scope="row" >{{player}} </td>
-                <td> <button  type='btn' :class="'btn btn-danger ' + index" @click="leave(player['.key'])" > Leave </button> </td>
-                <td>
-                 <button  v-if="statusPlayer[index]==null" type='btn' :class="'btn btn-info ' + index" @click="ready(index,player['.key'])" > Cancel </button> 
-                 <button  v-else type='btn' :class="'btn btn-success ' + index" @click='ready(index)' > Ready </button> 
-                </td>
-            </tr>
-        </tbody>
-        <button @click="goToGame($route.params.id)">Enter Game!</button>
-    </table>
-</template>
-
+     <div>
+        <table class="table table-striped table-dark">
+            <thead>
+                <tr class="col-sm-12">
+                    <th scope="col">{{player1}}</th>
+                    <th scope="col" >{{player2}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td> <button v-if='username==player1' type='btn' class='btn btn-danger' @click='leave(userId)' >Leave</button> </td>
+                    <td> <button v-if='username==player2' type='btn' class='btn btn-danger' @click='leave(userId)' >Leave</button> </td>
+                </tr>
+            </tbody>
+        </table>
+        <div v-if="roomStatus=='ok'" >
+            <button v-if='username==player2' type='btn' class='btn btn-info' @click='start' >Start</button>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -30,7 +27,11 @@ export default {
     name:'room',
     data() {
         return {
-        statusPlayer:[],
+        player1:null,
+        player2:null,
+        username:null,
+        userId:null,
+        roomStatus:null,
         }
    
     },
@@ -39,25 +40,29 @@ export default {
         rooms:db.ref('rooms')
     },
     methods:{
-        ready(index,key){
-        },
         leave(key){
-             this.$firebaseRefs.players.child(key).remove()
-             if(this.players.length==0){
-                this.$router.push({name:'lobby'})
-             }
+            this.$firebaseRefs.players.child(key).remove()
+            this.$router.push({name:'lobby'})
+        },
+        start(){
+            this.$router.push({name:'game',params:{userId:this.$route.params.id}})
         }
     },
-    updated(){
-        if(this.players.length==2){
-            this.$router.push({name:'game', params: {id: $route.params.id}})
-        }
-    },
-    methods: {
-        goToGame (key) {
-            console.log(key)
-            this.$router.push({name:'game', params: {id: key}})
-        }
+    mounted(){
+         let key = this.$route.params.id
+        let roomTemp = {}
+
+        this.rooms.forEach(room => {
+            if(room['.key'] === key) {
+                roomTemp = room
+            }
+        })
+        this.player1 = roomTemp.player1
+        this.player2 = roomTemp.player2
+        
+        this.username = localStorage.getItem('username')
+        this.userId = localStorage.getItem('userId')
+        this.roomStatus = roomTemp.status
     }
 }
 </script>
