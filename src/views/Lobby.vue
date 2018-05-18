@@ -11,9 +11,9 @@
           <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalAddRoom">
             Add New Room
           </button>
-          <table class="roomtable table table-hover m-1">
+          <table id="tableroom" class="table table-hover m-1">
             <tbody v-for="(room, index) in rooms" :key="index">
-              <tr class="disabled"><router-link :to="{ name: 'room', params: { id: room['.key'] }}" @click.native="enterRoom(room)">{{ room.name }}</router-link></tr>
+              <tr ><router-link :to="{ name: 'room', params: { id: room['.key'] }}" @click.native="enterRoom(room)" :class="room.status">{{ room.name }}</router-link></tr>
             </tbody>
           </table>
           <!-- Modal -->
@@ -86,7 +86,8 @@ export default {
       } else {
         this.$firebaseRefs.rooms.push({
           name: this.roomName,
-          player1: this.username
+          player1: this.username,
+          status: 'ok'
         })
         let key = this.rooms[this.rooms.length-1]['.key']
         this.$router.push(`/room/${key}`)
@@ -96,6 +97,7 @@ export default {
       const roomData = { ...roomDetail }
       delete roomData['.key']
       roomData.player2 = this.username
+      roomData.status = 'full'
       this.$firebaseRefs.rooms.child(roomDetail['.key']).set(roomData)
     },
     logout () {
@@ -116,12 +118,40 @@ table{
 tr{
   border-style: dashed
 }
-.pemaintable{
-  border-style: groove;
+.ok {
+  background: #99ff99 ;
+  color: black;
+  width: 100px;
 }
-.disabled {
-   pointer-events: none;
-   cursor: default;
+.full {
+  background: #ffb3b3;
+  pointer-events: none;
+  cursor: default;
+  color: black;;
+  border-width: solid;
+}
+
+#tableroom {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#tableroom td, #tableroom th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#tableroom tr:nth-child(even){background-color: #f2f2f2;}
+
+#tableroom tr:hover {background-color: #ddd;}
+
+#tableroom th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
 }
 
 </style>
